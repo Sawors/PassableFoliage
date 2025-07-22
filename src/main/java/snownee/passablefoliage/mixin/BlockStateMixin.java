@@ -1,5 +1,7 @@
 package snownee.passablefoliage.mixin;
 
+import com.sun.jna.platform.unix.LibC;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -11,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase;
@@ -56,9 +57,18 @@ public class BlockStateMixin {
 			if (context instanceof EntityCollisionContext) {
 				entity = ((EntityCollisionContext) context).getEntity();
 			}
-			if (PassableFoliageCommonConfig.playerOnly && !(entity instanceof Player)) {
+			//LogManager.getLogManager().getLogger(PassableFoliage.ID).log(java.util.logging.Level.INFO,"c1");
+			// if true, entity is ignored by the mod
+			if (
+					PassableFoliageCommonConfig.allEntitiesLeafWalk
+					|| (entity instanceof LivingEntity && (
+							PassableFoliageCommonConfig.noLeafCheckEntities.contains(entity.getEncodeId())
+							|| (PassableFoliageCommonConfig.sizeLimitEnabled && entity.getBoundingBox().getSize() <= PassableFoliageCommonConfig.maxBoxSizeForLeafWalk)
+					))
+			) {
 				return;
 			}
+			//LogManager.getLogManager().getLogger(PassableFoliage.ID).log(java.util.logging.Level.INFO,"c2");
 			if (entity instanceof LivingEntity && PassableFoliage.hasLeafWalker((LivingEntity) entity)) {
 				if (context.isDescending() || entity.blockPosition().getY() <= pos.getY()) {
 					ci.setReturnValue(Shapes.empty());

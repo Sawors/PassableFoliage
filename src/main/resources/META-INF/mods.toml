@@ -5,8 +5,8 @@ license="MIT"
 [[mods]]
 modId="passablefoliage"
 version="${file.jarVersion}"
-displayName="Passable Foliage"
-authors="Snownee"
+displayName="Passable Foliage (Tiboise Edit)"
+authors="Snownee (edit by Sawors)"
 displayURL="https://minecraft.curseforge.com/projects/passable-foliage"
 description="Remove collision from leaves"
 

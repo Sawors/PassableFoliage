@@ -4,6 +4,8 @@ import snownee.kiwi.config.KiwiConfig;
 import snownee.kiwi.config.KiwiConfig.Path;
 import snownee.kiwi.config.KiwiConfig.Range;
 
+import java.util.List;
+
 @KiwiConfig
 public final class PassableFoliageCommonConfig {
 
@@ -21,14 +23,23 @@ public final class PassableFoliageCommonConfig {
 
 	public static boolean modifyPathFinding = true;
 
-	public static boolean playerOnly = false;
-
 	public static boolean alwaysNotViewBlocking = true;
 
 	public static boolean alwaysLeafWalking = false;
 
 	@Path("sounds.playerOnly")
 	public static boolean soundsPlayerOnly = false;
+
+	public static boolean allEntitiesLeafWalk = false;
+
+	@Path("limits.size.enable")
+	public static boolean sizeLimitEnabled = false;
+	@Path("limits.size.maxBoxSizeForLeafWalk")
+	public static float maxBoxSizeForLeafWalk = 0.875f;
+
+	public static List<String> noLeafCheckEntities = List.of("minecraft:parrot");
+
+	public static List<String> leafWalkingShoes = List.of();
 
 	@Path("sounds.volume")
 	@Range(min = 0, max = 10)

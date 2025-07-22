@@ -1,5 +1,7 @@
 package snownee.passablefoliage.mixin.forge;
 
+import net.minecraft.world.entity.LivingEntity;
+
 import org.spongepowered.asm.mixin.Mixin;
 
 import javax.annotation.Nullable;
@@ -19,8 +21,9 @@ public class BlockStateMixin implements IForgeBlockState {
 	@Override
 	public BlockPathTypes getBlockPathType(BlockGetter world, BlockPos pos, @Nullable Mob entity) {
 		BlockState self = (BlockState) (Object) this;
-		if (!PassableFoliageCommonConfig.playerOnly && PassableFoliageCommonConfig.modifyPathFinding && PassableFoliage.isPassable(self)) {
-			if (entity == null || !PassableFoliage.hasLeafWalker(entity)) {
+		// !PassableFoliageCommonConfig.allEntitiesLeafWalk || (entity instanceof LivingEntity && PassableFoliageCommonConfig.noLeafCheckEntities.contains(entity.getEncodeId()))
+		if (!PassableFoliageCommonConfig.allEntitiesLeafWalk && PassableFoliageCommonConfig.modifyPathFinding && PassableFoliage.isPassable(self)) {
+			if (entity == null || (!PassableFoliage.hasLeafWalker(entity) && !PassableFoliageCommonConfig.noLeafCheckEntities.contains(entity.getEncodeId()) && !(PassableFoliageCommonConfig.sizeLimitEnabled && entity.getBoundingBox().getSize() <= PassableFoliageCommonConfig.maxBoxSizeForLeafWalk))) {
 				return BlockPathTypes.OPEN;
 			}
 		}

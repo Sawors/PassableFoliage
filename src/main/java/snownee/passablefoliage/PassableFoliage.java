@@ -3,15 +3,24 @@ package snownee.passablefoliage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.Logging;
+import net.minecraftforge.registries.ForgeRegistries;
 import snownee.passablefoliage.enchantment.EnchantmentModule;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.logging.LogManager;
 
 public final class PassableFoliage {
 
@@ -91,7 +100,12 @@ public final class PassableFoliage {
 	}
 
 	public static boolean hasLeafWalker(LivingEntity entity) {
-		return PassableFoliageCommonConfig.alwaysLeafWalking || enchantmentEnabled && EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.LEAF_WALKER.get(), entity) > 0;
+		return
+				PassableFoliageCommonConfig.alwaysLeafWalking
+						|| (enchantmentEnabled && EnchantmentHelper.getEnchantmentLevel(EnchantmentModule.LEAF_WALKER.get(), entity) > 0)
+				|| PassableFoliageCommonConfig.leafWalkingShoes.contains(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(entity.getItemBySlot(EquipmentSlot.FEET).getItem())).toString())
+				|| (entity.getItemBySlot(EquipmentSlot.FEET).getTags().anyMatch((TagKey<Item> tag) -> tag.location().toString().equals("passablefoliage:grant_leafwalk")))
+				;
 	}
 
 	public static void setSuppressPassableCheck(boolean suppressPassableCheck) {
